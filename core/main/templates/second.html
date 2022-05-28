@@ -1,0 +1,11 @@
+{% extends 'home.html' %}
+
+{% block content %}
+{% for j in i.cat_shoos.all %}
+<h3>{{ j.name }}</h3>
+{% for k in j.shoosefirm.all %}
+    <p>{{ k.name }}</p>
+    <img src="{{ k.img.url }}" width="200px" alt="">
+{% endfor %}
+{% endfor %}
+{% endblock %}
