@@ -1,8 +1,41 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, View
 from .models import Category, Shoos, Firm
-# Create your views here.
+from .forms import NewUserForm
+from django.contrib.auth import login
+from django.contrib import messages
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import AuthenticationForm
 
+def register_request(request):
+	if request.method == "POST":
+		form = NewUserForm(request.POST)
+		if form.is_valid():
+			user = form.save()
+			login(request, user)
+			messages.success(request, "Registration successful." )
+			return redirect("home")
+		messages.error(request, "Unsuccessful registration. Invalid information.")
+	form = NewUserForm()
+	return render(request=request, template_name="register.html", context={"register_form":form})
+
+def login_request(request):
+	if request.method == "POST":
+		form = AuthenticationForm(request, data=request.POST)
+		if form.is_valid():
+			username = form.cleaned_data.get('username')
+			password = form.cleaned_data.get('password')
+			user = authenticate(username=username, password=password)
+			if user is not None:
+				login(request, user)
+				messages.info(request, f"You are now logged in as {username}.")
+				return redirect("home")
+			else:
+				messages.error(request,"Invalid username or password.")
+		else:
+			messages.error(request,"Invalid username or password.")
+	form = AuthenticationForm()
+	return render(request=request, template_name="login.html", context={"login_form":form})
 
 class HomeView(ListView):
     model = Shoos
@@ -12,28 +45,8 @@ class HomeView(ListView):
         categ = Category.objects.all()
         return render(request, self.template_name, {'categ':categ})
 
-def CategoryView(request, cats):
-    categorys = Shoos.objects.filter(category=cats)
-    return render(request, 'home_detail.html',  {'cats':cats, 'categorys':categorys})
-# class CategoryListView(ListView):
-#     template_name = 'home.html'
-
-#     def get(self, request):
-#         categorys = Category.objects.all()
-#         return render(request, self.template_name, {'categorys':categorys})
-
-class CategoryListView(View):
-    template_name = 'home.html'
-
-    def get(self, request):
-        categoryes = Category.objects.all()
-        for cat in categoryes:
-            shosse = Shoos.objects.filter(category_id = cat.id)
-        return render(request, self.template_name, {'categoryes':categoryes, 'shosse':shosse})
-
-# class CategoryDetailView(DetailView):
-#     template_name = 'second.html'
-
-#     def get(self, request, category_id):
-#         shooss = Shoos.objects.get(category_id=category_id)
-#         return render(request, self.template_name, {'shooss':shooss})
+class CategoryView(ListView):
+    template_name = 'home_detail.html'
+    def get(self, request, cats):
+        categorys = Shoos.objects.filter(category=cats)
+        return render(request, self.template_name,  {'cats':cats, 'categorys':categorys})
