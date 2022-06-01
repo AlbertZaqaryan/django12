@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import CategoryListView, CategoryDetailView
+from .views import CategoryView, HomeView
+
+
 
 urlpatterns = [
-    path('', CategoryListView.as_view(), name='home'),
-    path('Category/<int:category_id>',CategoryDetailView.as_view(), name='home_detail')
-
+    path('', HomeView.as_view(), name='home'),
+    path('category/<str:cats>/', CategoryView, name='category')
 
 ]
