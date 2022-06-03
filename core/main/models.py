@@ -38,3 +38,15 @@ class Firm(models.Model):
     class Meta:
         verbose_name = 'Firm'
         verbose_name_plural = 'Firms'
+
+class Cart(models.Model):
+    name = models.CharField('Cart name', max_length=100)
+    numbers = models.IntegerField('Cart numbers')
+    user = models.CharField('User name', max_length=100)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Cart'
+        verbose_name_plural = 'Carts'

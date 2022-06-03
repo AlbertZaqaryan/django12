@@ -4,8 +4,8 @@
         <h1>{{ i.name }}</h1>
             {% for j in i.shoosefirm.all %}
                 <h3>{{ j.name }}</h3>
-                <img src="{{ j.img.url }}" width="200px" alt="">
+                <a href="{% url 'category_detail' j.id %}"><img src="{{ j.img.url }}" width="200px" alt=""></a>
             {% endfor %}
     {% endfor %}
-    <a href="{% url 'home' %}"><button>GO TO HOME PAGE</button></a>
+    <a href="{% url 'home' %}"><button>Go To Home Page</button></a>
 {% endblock%}

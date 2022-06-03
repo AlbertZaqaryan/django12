@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h3>Buy This shoose</h3>
+    {{ form.render }}
+    <br><br>
+    <a href="{% url 'home' %}"><button>Go To Home Page</button></a>
+
+{% endblock %}
