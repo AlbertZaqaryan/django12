@@ -5,12 +5,13 @@ from django.views.generic import ListView, DetailView, View, FormView, TemplateV
 from .models import Category, Shoos, Firm, Cart
 from .forms import NewUserForm
 from django.contrib import messages
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from paypal.standard.forms import PayPalPaymentsForm
 from django.urls import reverse
 from paypal.standard.models import ST_PP_COMPLETED
 from paypal.standard.ipn.signals import valid_ipn_received
+from decimal import Decimal
 
 
 def register_request(request):
@@ -43,6 +44,12 @@ def login_request(request):
 	form = AuthenticationForm()
 	return render(request=request, template_name="login.html", context={"login_form":form})
 
+def logout_request(request):
+	logout(request)
+	messages.info(request, "You have successfully logged out.") 
+	return redirect("home")
+
+
 class HomeView(ListView):
     model = Shoos
     template_name = 'home.html'
@@ -64,16 +71,18 @@ class CategoryDetail(DetailView):
 		ca = Firm.objects.get(pk=id)
 		return render(request, self.template_name, {'ca':ca})
 
+
 class PaypalFormView(FormView):
     template_name = 'paypal_form.html'
     form_class = PayPalPaymentsForm
+    
 
     def get_initial(self):
 	    return {
 			"business": 'your-paypal-business-address@example.com',
-            "amount": 20,
-            "currency_code": "EUR",
-            "item_name": "Example item",
+            "amount": Firm().price,
+            "currency_code": "USD",
+            "item_name": Firm().name,
             "inovice": 1234,
             "notify_url": self.request.build_absolute_uri(reverse('paypal-ipn')),
             "return_url": self.request.build_absolute_uri(reverse('paypal-return')),

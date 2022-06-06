@@ -3,8 +3,8 @@
 {% block content %}
 
     <h1>{{ ca.name }}</h1>
-    <p>{{ ca.about }}</p>
-    <a href="{% url 'paypal' %}"><button>Buy Now</button></a>
+    <p>{{ ca.price }}</p>
+    <a href="{% url 'paypal' ca.id %}"><button>Buy Now</button></a>
     <img src="{{ ca.img.url }}" width="500px" alt="">
     <a href="{% url 'home' %}"><Button>Go To Home Page</Button></a>
 {% endblock %}

@@ -4,6 +4,5 @@
     {% for i in categ %}
         <a href="{% url 'category' i.id %}"><Button>{{ i.name }}</Button></a>
     {% endfor %}
-    <a href="{% url 'register' %}"><button>Register</button></a>
-    <a href="{% url 'login' %}"><button>Login</button></a>
+
 {% endblock %}

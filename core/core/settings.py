@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'paypal.standard.ipn',
 ]
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -124,6 +126,11 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR/'static'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR/'media'
+
+PAYPAL_RECEIVER_EMAIL = 'youremail@mail.com'
+
+PAYPAL_TEST = True
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
