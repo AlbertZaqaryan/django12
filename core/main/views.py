@@ -3,7 +3,7 @@ from django.dispatch import receiver
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, View, FormView, TemplateView
 from .models import Category, Shoos, Firm, Cart
-from .forms import NewUserForm
+from .forms import NewUserForm, AddPost
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -12,6 +12,8 @@ from django.urls import reverse
 from paypal.standard.models import ST_PP_COMPLETED
 from paypal.standard.ipn.signals import valid_ipn_received
 from decimal import Decimal
+from django.contrib.auth.models import User
+
 
 
 def register_request(request):
@@ -70,6 +72,18 @@ class CategoryDetail(DetailView):
 	def get(self, request, id):
 		ca = Firm.objects.get(pk=id)
 		return render(request, self.template_name, {'ca':ca})
+
+class AddPostListView(ListView):
+    template_name = 'add_post.html'
+    def get(self, request):
+        if request.method == 'POST':
+            form = AddPost(request.POST)
+            post = form.save()
+            # return redirect('home')
+        else:
+            form = AddPost()
+        return render(request, self.template_name, {'form':form})                
+            
 
 
 class PaypalFormView(FormView):
