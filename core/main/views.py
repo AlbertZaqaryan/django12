@@ -11,7 +11,6 @@ from paypal.standard.forms import PayPalPaymentsForm
 from django.urls import reverse
 from paypal.standard.models import ST_PP_COMPLETED
 from paypal.standard.ipn.signals import valid_ipn_received
-from decimal import Decimal
 from django.contrib.auth.models import User
 
 
@@ -73,18 +72,33 @@ class CategoryDetail(DetailView):
 		ca = Firm.objects.get(pk=id)
 		return render(request, self.template_name, {'ca':ca})
 
-class AddPostListView(CreateView):
-    template_name = 'add_post.html'
-    def get(self, request):
-        if request.method == 'POST':
-            form = AddPost(request.POST)
-            post = form.save()
-            return redirect('home')
-        else:
-            form = AddPost()
-        return render(request, self.template_name, {'form':form})                
+# class AddPostListView(ListView):
+#     template_name = 'add_post.html'
+#     def get(self, request):
+#         form = AddPost(request.POST)
+#         if request.method == 'POST':
+#             return render(request, self.template_name, {'form':form})                
             
+def add_post(request):
+	if request.method == "POST":
+		form = AddPost(request.POST)
+		if form.is_valid():
+			post = form.save()
+			messages.success(request, "Registration successful." )
+			return redirect("home")
+		messages.error(request, "Unsuccessful registration. Invalid information.")
+	form = AddPost()
+	return render(request=request, template_name="add_post.html", context={"form":form})
 
+
+class UserPageListView(ListView):
+    template_name = 'userpage.html'
+
+    def get(self, request):
+        users = NewUserForm(request.POST)
+        form = AddPost(request.POST)
+
+        return render(request, self.template_name, {'users':users, 'form':form})
 
 class PaypalFormView(FormView):
     template_name = 'paypal_form.html'
