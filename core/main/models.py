@@ -29,12 +29,11 @@ class Shoos(models.Model):
 class Firm(models.Model):
     shoose = models.ForeignKey(Shoos, on_delete=models.CASCADE, related_name='shoosefirm')
     name = models.CharField('Firm name', max_length=50)
-    about = models.TextField('Firm about')
     price = models.IntegerField('Firm price', null=True)
     img = models.ImageField('Firm image', upload_to='media')
 
     def __str__(self):
-        return f'{self.price}'
+        return self.name
 
     class Meta:
         verbose_name = 'Firm'

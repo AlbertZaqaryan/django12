@@ -20,9 +20,9 @@ class NewUserForm(UserCreationForm):
 		return user
 
 class AddPost(forms.Form):
-	shoos = forms.ModelChoiceField(queryset=Shoos.objects.all())
-	name = forms.CharField(max_length=50)
-	price = forms.IntegerField()
-	img = forms.ImageField()
+	__shoos = forms.ModelChoiceField(queryset=Shoos.objects.all())
+	__name = forms.CharField(max_length=50)
+	__price = forms.IntegerField()
+	__img = forms.ImageField()
 
 

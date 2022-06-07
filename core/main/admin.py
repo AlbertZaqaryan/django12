@@ -6,3 +6,4 @@ admin.site.register(Category)
 admin.site.register(Shoos)
 admin.site.register(Firm)
 
+

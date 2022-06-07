@@ -1,7 +1,7 @@
 from asyncio.log import logger
 from django.dispatch import receiver
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView, View, FormView, TemplateView
+from django.views.generic import ListView, DetailView, View, FormView, TemplateView, CreateView
 from .models import Category, Shoos, Firm, Cart
 from .forms import NewUserForm, AddPost
 from django.contrib import messages
@@ -73,13 +73,13 @@ class CategoryDetail(DetailView):
 		ca = Firm.objects.get(pk=id)
 		return render(request, self.template_name, {'ca':ca})
 
-class AddPostListView(ListView):
+class AddPostListView(CreateView):
     template_name = 'add_post.html'
     def get(self, request):
         if request.method == 'POST':
             form = AddPost(request.POST)
             post = form.save()
-            # return redirect('home')
+            return redirect('home')
         else:
             form = AddPost()
         return render(request, self.template_name, {'form':form})                
