@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% for i in carts %}
+        <h3>{{ i.name }}</h3>
+        <p>{{ i.cart_number }}</p>
+        <img src="{{ form.img }}" alt="">
+    {% endfor %}
+
+{% endblock %}

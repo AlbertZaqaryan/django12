@@ -1,3 +1,4 @@
+from distutils.command.upload import upload
 from django.db import models
 from django.urls import reverse
 # Create your models here.
@@ -43,6 +44,17 @@ class Cart(models.Model):
     name = models.CharField('Cart name', max_length=100)
     numbers = models.IntegerField('Cart numbers')
     user = models.CharField('User name', max_length=100)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Cart'
+        verbose_name_plural = 'Carts'
+
+class UserCarts(models.Model):
+    name = models.CharField('User name', max_length=30)
+    cart_number = models.IntegerField('Cart number')
 
     def __str__(self):
         return self.name

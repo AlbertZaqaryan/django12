@@ -1,9 +1,10 @@
 from asyncio.log import logger
 from django.dispatch import receiver
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, View, FormView, TemplateView, CreateView
-from .models import Category, Shoos, Firm, Cart
-from .forms import NewUserForm, AddPost
+from .models import Category, Shoos, Firm, Cart, UserCarts
+from .forms import NewUserForm, AddCart
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -11,7 +12,6 @@ from paypal.standard.forms import PayPalPaymentsForm
 from django.urls import reverse
 from paypal.standard.models import ST_PP_COMPLETED
 from paypal.standard.ipn.signals import valid_ipn_received
-from django.contrib.auth.models import User
 
 
 
@@ -72,23 +72,25 @@ class CategoryDetail(DetailView):
 		ca = Firm.objects.get(pk=id)
 		return render(request, self.template_name, {'ca':ca})
 
-# class AddPostListView(ListView):
-#     template_name = 'add_post.html'
-#     def get(self, request):
-#         form = AddPost(request.POST)
-#         if request.method == 'POST':
-#             return render(request, self.template_name, {'form':form})                
-            
 def add_post(request):
-	if request.method == "POST":
-		form = AddPost(request.POST)
+	form = AddCart()
+	if request.method == 'POST':
+		form = AddCart(request.POST)
 		if form.is_valid():
-			post = form.save()
-			messages.success(request, "Registration successful." )
-			return redirect("home")
-		messages.error(request, "Unsuccessful registration. Invalid information.")
-	form = AddPost()
-	return render(request=request, template_name="add_post.html", context={"form":form})
+			form.save()
+			context = {'form':form}
+			return redirect('post_detail')
+		else:
+			form = AddCart()
+			context = {'form':form}
+	else:
+		form = AddCart()
+		context = {'form':form}
+	return render(request, 'add_post.html', context)
+
+def post_detail(request):
+	carts = UserCarts.objects.all()
+	return render(request, 'post_detail.html', {'carts':carts})
 
 
 class UserPageListView(ListView):
@@ -96,7 +98,6 @@ class UserPageListView(ListView):
 
     def get(self, request):
         users = NewUserForm(request.POST)
-        form = AddPost(request.POST)
 
         return render(request, self.template_name, {'users':users, 'form':form})
 
